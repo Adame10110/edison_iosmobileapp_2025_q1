@@ -11,8 +11,8 @@ import Combine
 
 class ToDoListViewModel: ObservableObject {
     
-    @AppStorage("toDoItems") private var toDoItemsData: Data = Data()
-    
+    private let repository: ToDoListRepository = ToDoListRepositoryImpl()
+        
     @Published var editingItemId: UUID?
     @Published var inputTask: String = ""
     @Published var toDoItems: [ToDoItem] = []
@@ -21,63 +21,42 @@ class ToDoListViewModel: ObservableObject {
         if inputTask.isEmpty { return }
         toDoItems.append(ToDoItem(title: inputTask))
         inputTask = ""
-        saveToDoItems()
+        repository.saveToDoItems(toDoItems)
     }
     
     func removeItem(_ item: ToDoItem) {
         if let index = toDoItems.firstIndex(where: { $0.id == item.id}) {
             toDoItems.remove(at: index)
-            saveToDoItems()
+            repository.saveToDoItems(toDoItems)
         }
     }
     
     func toggleItem(_ item: ToDoItem) {
         if let index = toDoItems.firstIndex(where: { $0.id == item.id}) {
             toDoItems[index].isComplete.toggle()
-            saveToDoItems()
+            repository.saveToDoItems(toDoItems)
         }
     }
     
     func updateItemText(_ item: ToDoItem, _ newValue: String) {
         if let index = toDoItems.firstIndex(where: { $0.id == item.id}) {
             toDoItems[index].title = newValue
-            saveToDoItems()
+            repository.saveToDoItems(toDoItems)
         }
     }
     
     func loadData() {
-        loadToDoItems()
+        toDoItems = repository.loadToDoItems()
     }
     
     func onSubmit() {
         editingItemId = nil
-        saveToDoItems()
+        repository.saveToDoItems(toDoItems)
     }
     
     func onSubmit(_ item: ToDoItem) {
         editingItemId = item.id
-        saveToDoItems()
+        repository.saveToDoItems(toDoItems)
     }
     
-}
-
-extension ToDoListViewModel {
-    private func saveToDoItems(){
-        do {
-            let data = try JSONEncoder().encode(toDoItems)
-            UserDefaults.standard.set(data, forKey: "toDoItems")
-        } catch {
-            print("Error saving data: \(error)")
-        }
-    }
-    
-    private func loadToDoItems(){
-        if let data = UserDefaults.standard.data(forKey: "toDoItems") {
-            do {
-                toDoItems = try JSONDecoder().decode([ToDoItem].self, from: data)
-            } catch {
-                print("Error loading data: \(error)")
-            }
-        }
-    }
 }
