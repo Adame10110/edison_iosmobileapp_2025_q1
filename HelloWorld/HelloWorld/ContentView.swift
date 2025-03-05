@@ -75,6 +75,74 @@ struct ContentView: View {
                     ForEach(viewModel.toDoItems) { item in
                         HStack {
                             if item.isComplete == false {
+                                if !item.title.lowercased().contains(searchText.lowercased())
+                                    && searchText != "" || searchText == ""{
+    //                                Text("ASDSDF")
+                                }
+                    
+                                    Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
+                                        .onTapGesture {
+                                            viewModel.toggleItem(item)
+                                        }
+                                    
+                                    if viewModel.editingItemId == item.id {
+                                        TextField("", text: Binding(
+                                            get: { item.title },
+                                            set: { newValue in
+                                                viewModel.updateItemText(item, newValue)
+                                            }
+                                        ))
+                                        .onSubmit {
+                                            viewModel.onSubmit()
+                                        }
+                                        
+                                    } else {
+                                        Text(item.title)
+                                            .strikethrough(item.isComplete)
+                                            .onTapGesture {
+                                                viewModel.onSubmit(item)
+                                            }
+                                    }
+                                    Spacer()
+                                    
+                                    Text(item.itemTag)
+                                    
+                                    //priority set
+                                    if(item.itemPriority == 0)
+                                    {
+                                        Text("XXX")
+                                    }
+                                    if(item.itemPriority == 1)
+                                    {
+                                        Text("XX")
+                                        
+                                    }
+                                    if(item.itemPriority == 2)
+                                    {
+                                        Text("X")
+                                    }
+                                    
+                                    
+                                    Button {
+                                        viewModel.removeItem(item)
+                                    } label : {
+                                        Image(systemName: "minus.circle")
+                                    }
+                                    .buttonStyle(BorderlessButtonStyle())
+
+                            }
+                        }
+                    }
+                }
+            }
+            
+            else
+            {
+                List {
+                    ForEach(viewModel.toDoItems) { item in
+                        HStack {
+                            if item.title.lowercased().contains(searchText.lowercased())
+                                && searchText != "" || searchText == ""{
                                 Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
                                     .onTapGesture {
                                         viewModel.toggleItem(item)
@@ -123,68 +191,60 @@ struct ContentView: View {
                                 } label : {
                                     Image(systemName: "minus.circle")
                                 }
-                                .buttonStyle(BorderlessButtonStyle())
-                            }
-                        }
-                    }
-                }
-            }
-            
-            else
-            {
-                List {
-                    ForEach(viewModel.toDoItems) { item in
-                        HStack {
+                                .buttonStyle(BorderlessButtonStyle())                            }
                             
-                            Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
-                                .onTapGesture {
-                                    viewModel.toggleItem(item)
-                                }
-                            
-                            if viewModel.editingItemId == item.id {
-                                TextField("", text: Binding(
-                                    get: { item.title },
-                                    set: { newValue in
-                                        viewModel.updateItemText(item, newValue)
-                                    }
-                                ))
-                                .onSubmit {
-                                    viewModel.onSubmit()
-                                }
-                                
-                            } else {
-                                Text(item.title)
-                                    .strikethrough(item.isComplete)
-                                    .onTapGesture {
-                                        viewModel.onSubmit(item)
-                                    }
-                            }
-                            Spacer()
-                            
-                            Text(item.itemTag)
-                            
-                            //priority set
-                            if(item.itemPriority == 0)
-                            {
-                                Text("XXX")
-                            }
-                            if(item.itemPriority == 1)
-                            {
-                                Text("XX")
-                                
-                            }
-                            if(item.itemPriority == 2)
-                            {
-                                Text("X")
-                            }
-                            
-                            
-                            Button {
-                                viewModel.removeItem(item)
-                            } label : {
-                                Image(systemName: "minus.circle")
-                            }
-                            .buttonStyle(BorderlessButtonStyle())
+//                            else if searchText == ""
+//                            {
+//                                Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
+//                                    .onTapGesture {
+//                                        viewModel.toggleItem(item)
+//                                    }
+//                                
+//                                if viewModel.editingItemId == item.id {
+//                                    TextField("", text: Binding(
+//                                        get: { item.title },
+//                                        set: { newValue in
+//                                            viewModel.updateItemText(item, newValue)
+//                                        }
+//                                    ))
+//                                    .onSubmit {
+//                                        viewModel.onSubmit()
+//                                    }
+//                                    
+//                                } else {
+//                                    Text(item.title)
+//                                        .strikethrough(item.isComplete)
+//                                        .onTapGesture {
+//                                            viewModel.onSubmit(item)
+//                                        }
+//                                }
+//                                Spacer()
+//                                
+//                                Text(item.itemTag)
+//                                
+//                                //priority set
+//                                if(item.itemPriority == 0)
+//                                {
+//                                    Text("XXX")
+//                                }
+//                                if(item.itemPriority == 1)
+//                                {
+//                                    Text("XX")
+//                                    
+//                                }
+//                                if(item.itemPriority == 2)
+//                                {
+//                                    Text("X")
+//                                }
+//                                
+//                                
+//                                Button {
+//                                    viewModel.removeItem(item)
+//                                } label : {
+//                                    Image(systemName: "minus.circle")
+//                                }
+//                                .buttonStyle(BorderlessButtonStyle())
+//                            }
                             
                         }
                     }
