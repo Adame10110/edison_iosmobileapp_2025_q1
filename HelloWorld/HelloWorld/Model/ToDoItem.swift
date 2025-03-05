@@ -11,4 +11,6 @@ struct ToDoItem: Identifiable, Codable {
     var id: UUID = UUID()
     var title: String
     var isComplete: Bool = false
+    var priority: Int = 1
+//    var tag: String
 }

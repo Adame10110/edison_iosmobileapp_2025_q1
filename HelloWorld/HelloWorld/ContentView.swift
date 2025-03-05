@@ -7,10 +7,22 @@
 
 import SwiftUI
 
+enum Priority: String, CaseIterable, Identifiable {
+    case Urgent, Soon, Whenever
+    var id: Self { self }
+}
 
 struct ContentView: View {
 
     @StateObject private var viewModel = ToDoListViewModel()
+    
+    @State private var sort = false
+    @State private var hide = false
+    @State private var searchText: String = ""
+    @State private var priority: Priority = .Soon
+    @State private var tag: String = ""
+    //priority
+    //tags
     
     var body: some View {
         VStack {
@@ -20,9 +32,33 @@ struct ContentView: View {
                     viewModel.addItem()
                 }
             }
+            VStack {
+                Picker("Priority", selection: $priority) {
+                    ForEach(Priority.allCases) { priority in Text(priority.rawValue.capitalized)
+                    }
+                }
+            }
+            .pickerStyle(.segmented)
+            
+            HStack {
+                TextField("Search Tasks", text: $searchText)
+            }
+            
             .padding([.leading, .trailing, .bottom], 15)
             .background(Color.gray.opacity(0.2))
             
+            HStack {
+                Toggle(isOn: $sort) {
+                    Text("Sort Priority")
+                }
+                Toggle(isOn: $hide) {
+                    Text("Hide Completed")
+                }
+            }
+            
+            .padding([.leading, .trailing, .bottom], 5)
+            .background(Color.gray.opacity(0.2))
+                        
             List {
                 ForEach(viewModel.toDoItems) { item in
                     HStack {
@@ -30,6 +66,8 @@ struct ContentView: View {
                             .onTapGesture {
                                 viewModel.toggleItem(item)
                             }
+                        
+                        
                         if viewModel.editingItemId == item.id {
                             TextField("", text: Binding(
                                 get: { item.title },
