@@ -64,59 +64,121 @@ struct ContentView: View {
             
             .padding([.leading, .trailing, .bottom], 5)
             .background(Color.gray.opacity(0.2))
-                        
-            List {
-                ForEach(viewModel.toDoItems) { item in
-                    HStack {
-                        
-                        if(item.itemPriority == 0)
-                        {
-                            Text("XXX")
-                        }
-                        if(item.itemPriority == 1)
-                        {
-                            Text("XX")
-
-                        }
-                        if(item.itemPriority == 2)
-                        {
-                            Text("X")
-                        }
-                        
-                        Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
-                            .onTapGesture {
-                                viewModel.toggleItem(item)
-                            }
-                        
-                        if viewModel.editingItemId == item.id {
-                            TextField("", text: Binding(
-                                get: { item.title },
-                                set: { newValue in
-                                    viewModel.updateItemText(item, newValue)
+            
+            if(hide)
+            {
+                List {
+                    ForEach(viewModel.toDoItems) { item in
+                        HStack {
+                            if item.isComplete == false {
+                                Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
+                                    .onTapGesture {
+                                        viewModel.toggleItem(item)
+                                    }
+                                
+                                if viewModel.editingItemId == item.id {
+                                    TextField("", text: Binding(
+                                        get: { item.title },
+                                        set: { newValue in
+                                            viewModel.updateItemText(item, newValue)
+                                        }
+                                    ))
+                                    .onSubmit {
+                                        viewModel.onSubmit()
+                                    }
+                                    
+                                } else {
+                                    Text(item.title)
+                                        .strikethrough(item.isComplete)
+                                        .onTapGesture {
+                                            viewModel.onSubmit(item)
+                                        }
                                 }
-                            ))
-                            .onSubmit {
-                                viewModel.onSubmit()
+                                Spacer()
+                                
+                                //priority set
+                                if(item.itemPriority == 0)
+                                {
+                                    Text("XXX")
+                                }
+                                if(item.itemPriority == 1)
+                                {
+                                    Text("XX")
+                                    
+                                }
+                                if(item.itemPriority == 2)
+                                {
+                                    Text("X")
+                                }
+                                
+                                
+                                Button {
+                                    viewModel.removeItem(item)
+                                } label : {
+                                    Image(systemName: "minus.circle")
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                            }
+                        }
+                    }
+                }
+            }
+            
+            else
+            {
+                List {
+                    ForEach(viewModel.toDoItems) { item in
+                        HStack {
+                            
+                            Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
+                                .onTapGesture {
+                                    viewModel.toggleItem(item)
+                                }
+                            
+                            if viewModel.editingItemId == item.id {
+                                TextField("", text: Binding(
+                                    get: { item.title },
+                                    set: { newValue in
+                                        viewModel.updateItemText(item, newValue)
+                                    }
+                                ))
+                                .onSubmit {
+                                    viewModel.onSubmit()
+                                }
+                                
+                            } else {
+                                Text(item.title)
+                                    .strikethrough(item.isComplete)
+                                    .onTapGesture {
+                                        viewModel.onSubmit(item)
+                                    }
+                            }
+                            Spacer()
+                            
+                            //priority set
+                            if(item.itemPriority == 0)
+                            {
+                                Text("XXX")
+                            }
+                            if(item.itemPriority == 1)
+                            {
+                                Text("XX")
+                                
+                            }
+                            if(item.itemPriority == 2)
+                            {
+                                Text("X")
                             }
                             
-                        } else {
-                                Text(item.title)
-                                .strikethrough(item.isComplete)
-                                .onTapGesture {
-                                    viewModel.onSubmit(item)
-                                }
+                            
+                            Button {
+                                viewModel.removeItem(item)
+                            } label : {
+                                Image(systemName: "minus.circle")
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                            
                         }
-                        Spacer()
-                        
-                        
-                        
-                        Button {
-                            viewModel.removeItem(item)
-                        } label : {
-                            Image(systemName: "minus.circle")
-                        }
-                        .buttonStyle(BorderlessButtonStyle())
-                        
                     }
                 }
             }

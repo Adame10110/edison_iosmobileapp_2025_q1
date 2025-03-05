@@ -51,6 +51,13 @@ class ToDoListViewModel: ObservableObject {
         }
     }
     
+    func sortList() {
+        toDoItems.sort { (item1, item2) -> Bool in
+            return item1.itemPriority < item2.itemPriority
+        }
+        repository.saveToDoItems(toDoItems)
+    }
+    
     func updateItemText(_ item: ToDoItem, _ newValue: String) {
         if let index = toDoItems.firstIndex(where: { $0.id == item.id}) {
             toDoItems[index].title = newValue
