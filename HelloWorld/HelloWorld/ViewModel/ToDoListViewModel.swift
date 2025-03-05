@@ -19,7 +19,7 @@ class ToDoListViewModel: ObservableObject {
     
     private var stupidPriority = 0
     
-    func addItem(_ priority: Priority) {
+    func addItem(_ priority: Priority, _ tag: String) {
         if inputTask.isEmpty { return }
         
         if (priority.rawValue == "Urgent") {
@@ -32,7 +32,7 @@ class ToDoListViewModel: ObservableObject {
             stupidPriority = 2
         }
         
-        toDoItems.append(ToDoItem(title: inputTask, itemPriority: stupidPriority))
+        toDoItems.append(ToDoItem(title: inputTask, itemPriority: stupidPriority, itemTag: tag))
         inputTask = ""
         repository.saveToDoItems(toDoItems)
     }

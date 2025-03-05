@@ -35,7 +35,7 @@ struct ContentView: View {
             HStack {
                 TextField("Input task", text: $viewModel.inputTask)
                 Button("Add") {
-                    viewModel.addItem($priority.wrappedValue)
+                    viewModel.addItem($priority.wrappedValue, $tag.wrappedValue)
                 }
             }
             VStack {
@@ -45,6 +45,10 @@ struct ContentView: View {
                 }
             }
             .pickerStyle(.segmented)
+            
+            HStack {
+                TextField("Tag", text: $tag)
+            }
             
             HStack {
                 TextField("Search Tasks", text: $searchText)
@@ -95,6 +99,8 @@ struct ContentView: View {
                                         }
                                 }
                                 Spacer()
+                                
+                                Text(item.itemTag)
                                 
                                 //priority set
                                 if(item.itemPriority == 0)
@@ -154,6 +160,8 @@ struct ContentView: View {
                                     }
                             }
                             Spacer()
+                            
+                            Text(item.itemTag)
                             
                             //priority set
                             if(item.itemPriority == 0)

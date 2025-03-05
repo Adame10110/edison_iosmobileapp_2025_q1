@@ -12,5 +12,5 @@ struct ToDoItem: Identifiable, Codable {
     var title: String
     var isComplete: Bool = false
     var itemPriority: Int = 1
-//    var tag: String
+    var itemTag: String
 }
