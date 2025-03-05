@@ -12,6 +12,10 @@ enum Priority: String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+class killMe {
+    
+}
+
 struct ContentView: View {
 
     @StateObject private var viewModel = ToDoListViewModel()
@@ -21,6 +25,8 @@ struct ContentView: View {
     @State private var searchText: String = ""
     @State private var priority: Priority = .Soon
     @State private var tag: String = ""
+    @State var priorityToPass = 0
+    var x = 0
     //priority
     //tags
     
@@ -29,7 +35,7 @@ struct ContentView: View {
             HStack {
                 TextField("Input task", text: $viewModel.inputTask)
                 Button("Add") {
-                    viewModel.addItem()
+                    viewModel.addItem($priority.wrappedValue)
                 }
             }
             VStack {
@@ -62,11 +68,25 @@ struct ContentView: View {
             List {
                 ForEach(viewModel.toDoItems) { item in
                     HStack {
+                        
+                        if(item.itemPriority == 0)
+                        {
+                            Text("XXX")
+                        }
+                        if(item.itemPriority == 1)
+                        {
+                            Text("XX")
+
+                        }
+                        if(item.itemPriority == 2)
+                        {
+                            Text("X")
+                        }
+                        
                         Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
                             .onTapGesture {
                                 viewModel.toggleItem(item)
                             }
-                        
                         
                         if viewModel.editingItemId == item.id {
                             TextField("", text: Binding(
@@ -87,6 +107,9 @@ struct ContentView: View {
                                 }
                         }
                         Spacer()
+                        
+                        
+                        
                         Button {
                             viewModel.removeItem(item)
                         } label : {
